@@ -1,0 +1,40 @@
+{
+  "name": "poolus-api-template",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Poolus Api Template",
+  "keywords": [],
+  "author": "frodo@poolus.kr",
+  "license": "",
+  "main": "src/index.js",
+  "dependencies": {
+    "aws-sdk": "2.185.0",
+    "compression": "1.7.1",
+    "connect-redis": "^3.3.3",
+    "cookie-parser": "^1.4.3",
+    "elasticsearch": "^14.0.0",
+    "express": "4.16.2",
+    "express-session": "^1.15.6",
+    "hpp": "^0.2.2",
+    "http-aws-es": "^4.0.0",
+    "jsonwebtoken": "^8.1.0",
+    "lodash": "4.17.4",
+    "mysql": "^2.14.1",
+    "node-postgres-named": "^2.4.1",
+    "pg": "^7.4.1",
+    "redis": "^2.8.0",
+    "request-promise": "^4.2.2",
+    "superagent": "^3.8.2",
+    "swagger-express-mw": "^0.7.0",
+    "swagger-ui": "^3.9.2"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development node src/server",
+    "test": "swagger project test",
+    "postinstall": "npm update linkshops-common"
+  }
+}
