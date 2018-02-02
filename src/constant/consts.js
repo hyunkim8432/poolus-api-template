@@ -13,10 +13,10 @@ const Config = {
   SESSION_EXPIRES_SEC: 60 * 60 * 24 * 7, // 7 day
 
   /**
-   * Config SESSION_EXPIRES_UNCLE_SEC
+   * Config SESSION_EXPIRES_POOL_US_SEC
    * @type {number}
    */
-  SESSION_EXPIRES_UNCLE_SEC: 60 * 60 * 24 * 356, // 356 day
+  SESSION_EXPIRES_POOL_US_SEC: 60 * 60 * 24 * 356, // 356 day
 };
 
 /** @namespace */

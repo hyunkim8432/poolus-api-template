@@ -19,7 +19,7 @@ function authenticationMiddleware (server) {
     global.sessionMiddleware = session({
       store: new RedisStore(server.config.redis.session),
       secret: Config.SECRET,
-      ttl: Config.SESSION_EXPIRES_UNCLE_SEC,
+      ttl: Config.SESSION_EXPIRES_POOL_US_SEC,
       saveUninitialized: false,
       resave: false,
     });
@@ -35,53 +35,53 @@ function authenticationMiddleware (server) {
 function authenticate(req, res, next) {
 
   next();
-  //TODO JWT 인증 로직 추후에 수정 후 적용
-  // const token = req.headers[Settings.TOKEN_KEY] || (req.session ? req.session.token : null);
-  //
-  // if (token !== undefined && !!token ) {
-  //   jwt.verify(token, Config.SECRET, function (err, result) {
-  //     if (err) {
-  //       return next(new global.errors.UnauthorizedError(err));
-  //     } else {
-  //       if (!result.exp) {
-  //         return next(new global.errors.ExpiredTokenError());
-  //       }
-  //
-  //       result.exp = result.exp * 1000;
-  //
-  //       if ( (new Date()).getTime() > result.exp ) {
-  //         return next(new global.errors.ExpiredTokenError());
-  //       }
-  //
-  //       if (result && result.password) {
-  //         delete result.password;
-  //       }
-  //
-  //       if (!req.session) {
-  //         return next(new global.errors.BadRequestError('세션이 만료되었습니다.\n새로고침 해주시기 바랍니다.'));
-  //       }
-  //       req.session.token = token;
-  //       req.session.branch = new Branch(result.id, result.email);
-  //
-  //       next();
-  //     }
-  //   });
-  // } else if (req.url === '/auth/login'){
-  //   next();
-  // } else {
-  //   next(new global.errors.custom.UnauthorizedError());
-  // }
+
+
+  // TODO JWT Login Logic 정책 결정 후 적용.
+  const token = req.headers[Settings.TOKEN_KEY] || (req.session ? req.session.token : null);
+
+  if (token !== undefined && !!token ) {
+    jwt.verify(token, Config.SECRET, function (err, result) {
+      if (err) {
+        return next(new global.errors.UnauthorizedError(err));
+      } else {
+        if (!result.exp) {
+          return next(new global.errors.ExpiredTokenError());
+        }
+        result.exp = result.exp * 1000;
+
+        if ( (new Date()).getTime() > result.exp ) {
+          return next(new global.errors.ExpiredTokenError());
+        }
+
+        if (result && result.password) {
+          delete result.password;
+        }
+
+        if (!req.session) {
+          return next(new global.errors.BadRequestError('세션이 만료되었습니다.\n새로고침 해주시기 바랍니다.'));
+        }
+
+        req.session.token = token;
+        req.session.poolus = new Pooulus(result.id, result.email);
+
+        next();
+      }
+    });
+  } else {
+    next(new global.errors.custom.UnauthorizedError());
+  }
 }
 
 
-class Branch {
+class Pooulus {
   constructor(id, email) {
     this.id = id;
     this.email = email;
   }
+
   async isAuthenticate(permissionProperty, operator, value) {
     try {
-
       return true;
     } catch (e) {
       throw e;
@@ -90,6 +90,5 @@ class Branch {
 }
 
 module.exports = authenticationMiddleware;
-
 module.exports.authenticate = authenticate;
-module.exports.Branch = Branch;
+module.exports.Pooulus = Pooulus;

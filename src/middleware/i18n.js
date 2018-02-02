@@ -9,5 +9,4 @@
 // TODO 한파일로 할지, 언어별로 나눌지 고민 후 구현
 export const i18nMiddleware = async server => {
 
-
 };
